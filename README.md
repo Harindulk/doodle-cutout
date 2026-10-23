@@ -6,11 +6,13 @@
 Turn a phone photo of a drawing on paper into a clean, transparent **sticker sprite**.
 Zero dependencies, about 1,100 lines of TypeScript, runs in the browser (main thread or Web Worker), Node and Bun.
 
-![A phone photo of a felt-tip monster on paper, with a shadow and a wooden table at the edge, and the cut-out sticker on transparency](examples/monster-before-after.png)
+![A synthetic test photo of a felt-tip monster on paper, with a shadow and a wooden table at the edge, and the cut-out sticker on transparency](examples/monster-before-after.png)
+
+*The example images are synthetic test photos rendered by [`scripts/photos.ts`](scripts/photos.ts), not real phone photos; `bun run images` regenerates them.*
 
 ## Why
 
-We built this for **Sketchlings**, a Fire TV party game where kids draw a creature on paper, snap it with a phone,
+We built this for **[Sketchlings](https://github.com/Harindulk/sketchlings)**, a Fire TV party game where kids draw a creature on paper, snap it with a phone,
 and seconds later it walks onto the TV and races the family's other drawings. A kid's photo is the worst-case input
 for background removal: uneven lamp light, the phone's own shadow, a bit of table at the edge, crumbs, a signature,
 and creatures drawn as *outlines* that must come out as solid stickers rather than wire frames.
@@ -21,7 +23,7 @@ under a second, and the photo never has to leave the device.
 
 | Lined paper on a table, legs drawn to the paper's edge | Faint pink wings next to a dark marker | Coloured in over 60% of the photo |
 |---|---|---|
-| ![Lined notebook paper on a wooden table, and the cut-out with no lines and no table](examples/ruled-before-after.png) | ![A marker bug with thin pink wings and antennae, and the cut-out keeping the wings](examples/wings-before-after.png) | ![A creature coloured in with red crayon over most of the photo, and its cut-out](examples/coloured-in-before-after.png) |
+| ![A synthetic test photo of lined notebook paper on a wooden table, and the cut-out with no lines and no table](examples/ruled-before-after.png) | ![A synthetic test photo of a marker bug with thin pink wings and antennae, and the cut-out keeping the wings](examples/wings-before-after.png) | ![A synthetic test photo of a creature coloured in with red crayon over most of the photo, and its cut-out](examples/coloured-in-before-after.png) |
 
 ## Install
 
@@ -30,6 +32,12 @@ Not on npm yet. Install it from GitHub (it builds `dist/` on install):
 ```sh
 npm install github:Harindulk/doodle-cutout
 ```
+
+With Bun, `bun add github:Harindulk/doodle-cutout` blocks the build script, and that is fine: Bun loads the TypeScript
+source in `src/` directly.
+
+The package is ESM only: use `import` (Node 20.19+ and 22.12+ can also `require()` it). The type definitions need
+TypeScript 5.7 or later (or `skipLibCheck`).
 
 Or copy `src/` (three files, no dependencies) into your project.
 
@@ -95,7 +103,7 @@ function cutoutInWorker(image: ImageData): Promise<CutoutResult> {
 }
 ```
 
-Sketchlings does exactly this, with a main-thread fallback for browsers without module workers.
+[Sketchlings does exactly this](https://github.com/Harindulk/sketchlings/blob/main/phone/src/scan.ts), with a main-thread fallback for browsers without module workers.
 
 ### Node / Bun
 

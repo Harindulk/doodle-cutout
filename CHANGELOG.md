@@ -17,6 +17,10 @@ it, and [BENCHMARK.md](BENCHMARK.md) has the before/after table.
   they now come from paper-like tiles only. When a quarter of the photo lies between the noise floor and the Otsu
   threshold, Otsu runs again below it, so the threshold separates crayon from paper rather than outline from crayon.
 - A small sheet on a wide dark table no longer comes out as the whole sheet (a side effect of the threshold fix).
+- `CutoutResult.data` and `debug.flattened` are typed `Uint8ClampedArray<ArrayBuffer>`, so `new ImageData(r.data, ...)`
+  typechecks on TypeScript 5.7+. `bun run typecheck` now also checks `examples/demo.ts` against the DOM types.
+- Installing from GitHub: the build script no longer uses `rm -rf` (fails in Windows `cmd.exe`), Bun loads `src/`
+  directly (it blocks the build script on install), and `require()` works on Node 20.19+ / 22.12+.
 
 ### Added
 

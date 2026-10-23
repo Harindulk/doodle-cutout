@@ -1,11 +1,13 @@
 # Benchmark: 0.1.0 → 0.2.0
 
-Every case in `scripts/photos.ts`, plus the phone app's bundled sample photo, run through the code before the 0.2.0
-fixes and after, with the options the Sketchlings phone uses (`{outline: 8}`). To reproduce, check out the last 0.1.0
-commit next to this one and point the bench at its `src/`:
+Every case in `scripts/photos.ts`, plus the phone app's bundled sample photo
+([`phone/src/samples/monster.jpg`](https://github.com/Harindulk/sketchlings/blob/main/phone/src/samples/monster.jpg) in
+the Sketchlings repo), run through the code before the 0.2.0 fixes and after, with the options the Sketchlings phone
+uses (`{outline: 8}`). To reproduce, check out 4b76072 (the last commit before the 0.2.0 fixes) next to this one and
+point the bench at its `src/` (the bench reads PNG, so convert a JPEG first):
 
 ```sh
-git worktree add ../before <last 0.1.0 commit>
+git worktree add ../before 4b76072
 bun scripts/bench.ts --baseline ../before/src path/to/photo.png
 ```
 
@@ -13,6 +15,8 @@ bun scripts/bench.ts --baseline ../before/src path/to/photo.png
 - **Mask IoU:** how alike the two masks are (intersection over union, at working resolution). 1.000 means unchanged.
 - **Times:** median of 3 runs, on a busy machine (a virtual Fire TV device and a headless browser were running), so
   compare them within a row, not with the README's table.
+- **C2, C3, C4** name the three problems looked at for 0.2.0: C2 = big coloured-in drawings, C3 = crayon running off
+  the photo edge, C4 = thin faint strokes next to a dark marker.
 
 | Case | Size | Before | After | Mask IoU | ms before | ms after |
 |---|---|---|---|---|---|---|
@@ -41,7 +45,7 @@ bun scripts/bench.ts --baseline ../before/src path/to/photo.png
 | C2: coloured in, 60%, lined | 768×1024 | 681×905 at 44,60, 61.7% | 683×907 at 43,59, 62.0% | 0.994 | 297 | 325 |
 | C3: streaky crayon off the photo edge + doodle | 1024×768 | 517×451 at 9,159, 21.0% | 517×451 at 9,159, 21.4% | 0.981 | 433 | 430 |
 | C3: solid crayon off the photo edge + doodle | 1024×768 | 191×151 at 705,225, 2.9% | 191×151 at 705,225, 2.9% | 1.000 | 303 | 317 |
-| phone app sample photo (JPEG) | 900×675 | 573×520 at 183,79, 18.2% | 574×520 at 182,79, 18.2% | 1.000 | 238 | 249 |
+| phone app sample photo (JPEG, from the Sketchlings repo) | 900×675 | 573×520 at 183,79, 18.2% | 574×520 at 182,79, 18.2% | 1.000 | 238 | 249 |
 
 ## Reading the table
 
@@ -52,7 +56,7 @@ bun scripts/bench.ts --baseline ../before/src path/to/photo.png
 - **Unchanged, known limit (C3):** a solid crayon creature running off the photo edge, next to a separate doodle, still gives the doodle only, before and after. With streaky crayon, or with no other drawing, the creature is kept.
 - **Everything else:** mask IoU 0.975-1.000. The differences are single pixels at stroke ends.
 
-On the 34-photo stress set (crayon and marker on white, cream, lined and squared paper, with blur, JPEG, white
+On a 34-photo stress set (not in this repo; crayon and marker on white, cream, lined and squared paper, with blur, JPEG, white
 balance, fingers at the edge, shadows, rotated sheets on tables), old and new masks agree at IoU ≥ 0.97 on 30 photos.
 The other 4 are the big coloured-in drawings, which go from fragments to IoU 0.995 against the ground truth.
 

@@ -79,7 +79,7 @@ export interface CutoutDebug {
   threshold: number;
   weakThreshold: number;
   /** RGBA photo after lighting correction (paper = white). */
-  flattened: Uint8ClampedArray;
+  flattened: Uint8ClampedArray<ArrayBuffer>;
   /** Ink score 0..255. */
   score: Uint8Array;
   ink: Uint8Array;
@@ -91,7 +91,7 @@ export interface CutoutDebug {
 
 export interface CutoutResult {
   /** RGBA sprite (not premultiplied). Empty (0x0) when no drawing was found. */
-  data: Uint8ClampedArray;
+  data: Uint8ClampedArray<ArrayBuffer>;
   width: number;
   height: number;
   /** Bounds of the drawing in input-image pixels (without padding/outline). */
